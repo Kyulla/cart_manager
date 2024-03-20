@@ -12,24 +12,25 @@
             $this -> final_price = 0;
         }
 
-        //aggiustato addItem nel caso in cui un oggetto è già presente
         public function addItem(int $id, int $quantity, int $price){
             if(empty($this -> items)){
-                array_push($this -> items, array("item_id" => $id, "quantity" => $quantity));
+                array_push($this -> items, array("item_id" => $id, "quantity" => $quantity, "price" => $price));
+                $this -> final_price += ($price * $quantity);
+                return;
             }
 
             else{
                 foreach($this -> items as $key => $item){
                     if($item["item_id"] === $id){
                         $this -> items[$key]["quantity"] += $quantity;
-                    }
-
-                    else{
-                        array_push($this -> items, array("item_id" => $id, "quantity" => $quantity));
+                        $this -> final_price += ($price * $quantity);
+                        return;
                     }
                 }
+                array_push($this -> items, array("item_id" => $id, "quantity" => $quantity, "price" => $price));
+                $this -> final_price += ($price * $quantity);
+                return;
             }
-            $this -> final_price += ($price * $quantity);
         }
 
         public function removeItem(int $id, int $quantity, int $price){
@@ -47,6 +48,14 @@
                     return;
                 }
             }
+        }
+
+        public function getItems(){
+            return $this -> items;
+        }
+
+        public function getFinalPrice(){
+            return $this -> final_price;
         }
 
         public function checkout(){
